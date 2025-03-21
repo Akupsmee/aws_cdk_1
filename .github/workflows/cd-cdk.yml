@@ -1,9 +1,6 @@
 name: Deploy CDK
 
 on:
-  push:
-    branches:
-      - master
   pull_request:
     branches:
       - master
@@ -11,13 +8,13 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true || github.ref_name == 'master'
+    if: github.event.pull_request.merged == true
     name: Deploy AWS CDK Typescript Stack
     runs-on: ubuntu-latest
 
     steps:
       - name: Initiated By User
-        run: echo $GITHUB_ACTOR ${github.ref_name} ${github.base_ref}
+        run: echo $GITHUB_ACTOR ${{github.ref_name}} ${{github.base_ref}}
 
       - name: Checkout Code
         uses: actions/checkout@v4
