@@ -42,3 +42,4 @@ jobs:
         uses: aws-actions/configure-aws-credentials@master
         with:
           role-to-assume: arn:aws:iam::495599771428:role/gh-oidc
+          aws-region: eu-central-1
