@@ -1,0 +1,42 @@
+name: CI CDK
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build and Test AWS CDK Typescript Stack
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initiated By User
+        run: echo $GITHUB_ACTOR, $GITHUB_REF $GITHUB_BASE_REF
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Unit Test
+        run: npm run test
+
+      - name: Run Diff
+        run: npx cdk diff AwsCdkStack --ci --require-approval never --no-asset-metadata
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: eu-central-1

@@ -7,7 +7,7 @@ export class AwsCdkStack extends cdk.Stack {
     super(scope, id, props);
 
     new lambda.Function(this, "lambdaFunction", {
-      functionName: "first-cdk-lambda",
+      functionName: "cdk-lambda",
       code: new lambda.AssetCode('src'),
       handler: "index.handler",
       runtime: lambda.Runtime.NODEJS_18_X,
