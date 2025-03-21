@@ -7,6 +7,9 @@ on:
 
 jobs:
   build:
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
     name: Build and Test AWS CDK Typescript Stack
     runs-on: ubuntu-latest
 
@@ -31,9 +34,15 @@ jobs:
       - name: Unit Test
         run: npm run test
 
-      - name: Run Diff
-        run: npx cdk diff AwsCdkStack --ci --require-approval never --no-asset-metadata
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-central-1
+      # - name: Run Diff
+      #   run: npx cdk diff AwsCdkStack --ci --require-approval never --no-asset-metadata
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: eu-central-1
+
+      - name: Assume role using OIDC
+        uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: arn:aws:iam::495599771428:role/gh-oidc
+          aws-region: eu-central-1
