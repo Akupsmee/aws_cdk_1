@@ -17,7 +17,7 @@ jobs:
 
     steps:
       - name: Initiated By User
-        uses: echo $GITHUB_ACTOR
+        run: echo $GITHUB_ACTOR ${github.ref_name} ${github.base_ref}
 
       - name: Checkout Code
         uses: actions/checkout@v4
