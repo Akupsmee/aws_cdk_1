@@ -1,0 +1,41 @@
+name: Deploy CDK
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true || github.ref_name == 'master'
+    name: Deploy AWS CDK Typescript Stack
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initiated By User
+        uses: echo $GITHUB_ACTOR
+
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18.x"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Deploy CDK Stack
+        run: npx cdk deploy AwsCdkStack --ci --require-approval never --no-asset-metadata
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
