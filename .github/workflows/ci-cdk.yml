@@ -46,3 +46,6 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::495599771428:role/gh-oidc
           aws-region: eu-central-1
+
+      - name: Run Diff
+        run: npx cdk diff AwsCdkStack --ci --require-approval never --no-asset-metadata
